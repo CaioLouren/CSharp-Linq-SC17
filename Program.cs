@@ -29,7 +29,7 @@ namespace Secao
                     new Product() { Id = 5, Name = "Saw", Price = 80.0, Category = c1 },
                     new Product() { Id = 6, Name = "Tablet", Price = 700.0, Category = c2 },
                     new Product() { Id = 7, Name = "Camera", Price = 700.0, Category = c3 },
-                    new Product() { Id = 8, Name = "Printer", Price = 350.0, Category = c2 },
+                    new Product() { Id = 8, Name = "Printer", Price = 350.0, Category = c3 },
                     new Product() { Id = 9, Name = "MacBook", Price = 1800.0, Category = c2 },
                     new Product() { Id = 10, Name = "Sound Bar", Price = 700.0, Category = c3 },
                     new Product() { Id = 11, Name = "Level", Price = 70.0, Category = c1 }
@@ -59,6 +59,43 @@ namespace Secao
 
             var r8 = products.Where(p => p.Id == 3).SingleOrDefault();
             Console.WriteLine("Single or default test1: " + r8);
+
+            var r9 = products.Where(p => p.Id == 30).SingleOrDefault();
+            Console.WriteLine("Single or default test1: " + r9);
+
+            var r10 = products.Max(p => p.Price);
+            Console.WriteLine("Max price: " + r10);
+
+            var r11 = products.Min(p => p.Price);
+            Console.WriteLine("Max min: " + r11);
+
+            var r12 = products.Where(p => p.Category.Id == 1).Sum(p => p.Price);
+            Console.WriteLine("Category 1 Sum prices: " + r12);
+
+            var r13 = products.Where(p => p.Category.Id == 1).Average(p => p.Price);
+            Console.WriteLine("Category 1 Average prices: " + r13);
+
+            var r14 = products.Where(p => p.Category.Id == 5).Select(p => p.Price).DefaultIfEmpty(0.0).Average();
+            Console.WriteLine("Category 5 Average prices: " + r14);
+
+            var r15 = products.Where(p => p.Category.Id == 1).Select(p => p.Price).Aggregate((x, y) => x + y);
+            Console.WriteLine("Category 1 aggregate sum: " + r15);
+
+            var r16 = products.Where(p => p.Category.Id == 5).Select(p => p.Price).Aggregate(0.0, (x, y) => x + y);
+            Console.WriteLine("Category 5 aggregate sum: " + r16);
+
+            Console.WriteLine();
+
+            var r17 = products.GroupBy(p => p.Category);
+            foreach (IGrouping<Category, Product> group in r17)
+            {
+                Console.WriteLine("Category " + group.Key.Name + ":");
+                foreach (Product product in group)
+                {
+                    Console.WriteLine(product);
+                }
+                Console.WriteLine();
+            }
         }
     }
 }
