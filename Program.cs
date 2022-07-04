@@ -14,29 +14,33 @@ namespace Secao
             Console.Write("Enter full file path: ");
             string path = Console.ReadLine();
 
-            List<Product> list = new List<Product>();
+            List<Employee> employees = new List<Employee>();
 
             using (StreamReader sr = File.OpenText(path))
             {
                 while (!sr.EndOfStream)
                 {
-                    string[] fields = sr.ReadLine().Split(',');
-                    string name = fields[0];
-                    double price = double.Parse(fields[1], CultureInfo.InvariantCulture);
-                    list.Add(new Product(name, price));
+                    string[] line = sr.ReadLine().Split(",");
+                    string name = line[0];
+                    string email = line[1];
+                    double salary = Double.Parse(line[2], CultureInfo.InvariantCulture);
+                    employees.Add(new Employee(name, email, salary));
                 }
             }
 
-            var avg = list.Select(p => p.Price).DefaultIfEmpty(0.0).Average();//É bom botar o default para n da exerção
-            Console.WriteLine("Average price = " + avg.ToString("F2", CultureInfo.InvariantCulture));
+            Console.Write("Enter salary: ");
+            double salaryEnter = Double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
 
-            var names = list.Where(p => p.Price < avg).OrderByDescending(p => p.Name).Select(p => p.Name);
-            foreach(string name in names)
+            Console.WriteLine($"Email of people whose salary is more than {salaryEnter.ToString("F2", CultureInfo.InvariantCulture)}:");
+
+            var emails = employees.Where(e => e.Salary > 2000.00).OrderBy(e => e.Name).Select(e => e.Email);
+            foreach (string email in emails)
             {
-                Console.WriteLine(name);
+                Console.WriteLine(email);
             }
 
-
+            var sum = employees.Where(e => e.Name[0] == 'M').Sum(e => e.Salary);
+            Console.WriteLine($"Sum of salary of people whose name starts with 'M': {sum.ToString("F2", CultureInfo.InvariantCulture)}");
         }
     }
 }
